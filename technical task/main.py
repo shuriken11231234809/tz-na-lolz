@@ -4,34 +4,32 @@ from colorama import init, Fore
 
 from data.database import Database
 
-
+# ининциализация колорамы и бд (•‿•)
 init(autoreset=True)
 db = Database('data/db.db')
 
 
+# "типо" умный и сделал отдельную функцию, чтобы если что на линуксе cls был clear ⸂⸂⸜(രᴗര๑)⸝⸃⸃
 def clear():
-	if os.name == 'nt':
+	if os.name == 'nt': # если имя ос == nt, то есть винда, то cls, иначе clear
 		os.system('cls')
 
 	else:
 		os.system('clear')
 
 
+# основная функция, которая посылает юзера по своим дорожкам ( • )( • ) ԅ(‾⌣‾ԅ)
 def main():
-	os.system('cls')
+	clear()
 	print(Fore.YELLOW + 'Приветствую тебя, дорогой друг, в нашей лучшей библиотеке!!!')
 
-	choice = input('\nВыберите действие:\n1. Добавить книгу\n2. Просмотреть список книг\n3. Выйти\n>>> ')
+	choice = input('\nВыберите действие:\n1. Добавить книгу\n2. Просмотреть список книг\n>>> ')
 
 	if choice == '1':
-		create_book()
+		create_book() # функция создания книги
 
 	elif choice == '2':
-		listing_books()
-
-	elif choice == '3':
-		print(Fore.RED + 'Пока - пока!')
-		sys.exit()
+		show_books() # функция показа книг
 
 	else:
 		print(Fore.RED + 'Неправильно!!! Это не то, что нужно!')
@@ -40,32 +38,12 @@ def main():
 		main()
 
 
-
-def listing_books():
-	clear()
-
-	choice = input(Fore.YELLOW + '0. Назад\n1. Просмотр списка книг\n>>> ')
-
-	if choice == '0':
-		clear()
-		main()
-
-	elif choice == '1':
-		show_books()
-
-	else:
-		print(Fore.RED + 'Неправильно!!! Это не то, что нужно!')
-		time.sleep(2)
-		clear()
-		listing_books()
-
-
-
+# функция вывода списка книг (－_－) zzZ
 def show_books():
 	clear()
 	print(Fore.YELLOW + 'Выберите книгу: \n')
 
-	for i in db.get_all():
+	for i in db.get_all(): # перебирание всех книг из бд циклом и вывод поочередно
 		print(Fore.MAGENTA + f'ID: {i[0]}, Название: {i[1]}, Автор: {i[2]}, Жанр: {i[4]}')
 
 	word = input(Fore.YELLOW + '\n\nВозврат в меню: 0 \nДля просмотра информации о книге введите её ID \nТак же вы можете ввести жанр для просмотра всех книг из этого жанра \n\n>>> ')
@@ -74,29 +52,29 @@ def show_books():
 		main()
 
 	else:
-		choose_book(word)
+		choose_book(word) # выбор конкретной книги
 
 
-
+# выбор конкретной книги (-‿◦☀)
 def choose_book(word):
 	try:
 
-		books = db.search(word)
 		clear()
-		print(books)
+		books = db.search(word) # поиск книги
+		
 		for i in books:
 			print(Fore.MAGENTA + f'ID: {i[0]}, Название: {i[1]}, Автор: {i[2]}, Описание: {i[3]}, Жанр: {i[4]} \n')
 
 		choice = input(Fore.YELLOW + '0. Назад \n1. Удалить книгу \n>>> ')
 
 		if choice == '0':
-			show_books()
+			show_books() # возврат на показ книг
 
 		elif choice == '1':
-			delete_book()
+			delete_book() # удаление книги
 
 		else:
-			main()
+			main() #возврат в основное меню
 
 	except:
 		print(Fore.RED + 'Не нашёл похожих книг')
@@ -105,13 +83,14 @@ def choose_book(word):
 		main()
 
 
-
+# удаление книжечьки =＾● ⋏ ●＾=
 def delete_book():
 	book = input(Fore.YELLOW + 'Введите ID книги для удаления: \n>>> ')
 
 	try:
-		db.delete(book)
 		clear()
+
+		db.delete(book) # удаляшка книжки
 		print(Fore.GREEN + 'Книга удалена')
 
 		time.sleep(2)
@@ -124,7 +103,7 @@ def delete_book():
 		main()
 
 
-
+# создание книшьки ⸂⸂⸜(രᴗര๑)⸝⸃⸃
 def create_book():
 	clear()
 
@@ -141,8 +120,7 @@ def create_book():
 	clear()
 
 	book_id = random.randint(1, 10000)
-	db.add(book_id, title, autor, desc, genre)
-	db.add_genre(book_id, genre)
+	db.add(book_id, title, autor, desc, genre) # добавление книги
 
 	print(Fore.GREEN + 'Книга создана!')
 	
@@ -150,4 +128,6 @@ def create_book():
 	clear()
 	main()
 	
+
+
 main()
